@@ -17,12 +17,33 @@
 template<typename T>
 concept Stringable =
         std::is_class_v<std::string> ||
-        std::is_class_v<std::string_view>;
+            std::is_class_v<std::string_view>;
 
 template<typename T>
 concept Vectorizable =
-        std::is_class_v<std::vector<T> > ||
-        std::is_class_v<std::span<T> >;
+    std::is_class_v<std::vector<T>> ||
+        std::is_class_v<std::vector<const T>> ||
+            std::is_class_v<std::span<T>> ||
+                std::is_class_v<std::span<const T>>;
+
+template<typename T>
+concept BytesContainer =
+        std::is_class_v<std::string> ||
+            std::is_class_v<std::vector<char> >||
+                std::is_class_v<std::vector<char const>> ||
+                    std::is_class_v<std::vector<unsigned char>> ||
+                        std::is_class_v<std::vector<unsigned char const>>;
+
+template <typename T>
+concept BytesView =
+    std::is_class_v<std::string_view> ||
+        std::is_class_v<std::span<char>> ||
+            std::is_class_v<std::span<char const>> ||
+                std::is_class_v<std::span<unsigned char>> ||
+                    std::is_class_v<std::span<unsigned char const>>;
+
+template <typename T>
+concept Bytes = BytesContainer<T> || BytesView<T>;
 
 namespace bee {
     static constexpr auto Yes = true;

@@ -4,6 +4,7 @@
 
 #pragma once
 #include "types.h"
+#include "error.h"
 #include <span>
 #include <optional>
 #include <string>
@@ -13,19 +14,56 @@
 #include <algorithm>
 #include <charconv>
 #include <print>
+#include <pwd.h>
+#include <unistd.h>
+#include <filesystem>
 
 namespace bee {
+    inline String str(Bytes const& data) noexcept {
+        return String{data.data(), data.size()};
+    }
+
+    inline Vector<u8> vec(Bytes const& data) noexcept {
+        return Vector<u8>{data.begin(), data.end()};
+    }
+
+    /// Odczytanie katalogu domowego użytkownika.
+    inline Option<String> homeDirectory() noexcept {
+        if (auto const pw = getpwuid(getuid()))
+            return pw->pw_dir;
+        return {};
+    }
+
+    /// Tworzenie ciągu podkatalogów.
+    /// \param path Ścieżka do katalogu docelowego.
+    /// \return Błąd, jeśli coś poszło nie tak lub nic nie zwraca.
+    inline Option<Error> createDirectory(std::string_view const path) noexcept {
+        namespace fs = std::filesystem;
+        std::error_code ec{};
+
+        // Jeśli wskazany katalog już istnieje to nie ma nic do roboty.
+        if (fs::exists(path, ec))
+            return {};
+        if (ec != std::errc{})
+            return Error(ec.value(), ec.message());
+
+        // Tworzymy katalog z podkatalogami.
+        if (fs::create_directories(path, ec))
+            return {};
+        return Error(ec.value(), ec.message());
+    }
+
     /// Sprawdzenie, czy przysłany znak NIE jest białym znakiem.
     /// \param c Znak do sprawdzenia
     /// \return TRUE, jeśli NIE jest białym znakiem, FALSE w przeciwnym przypadku (jest białym znakiem).
-    static bool is_not_space (char const c) noexcept {
+    inline bool is_not_space (char const c) noexcept {
         return !std::isspace(c);
     }
 
     /// Obcięcie początkowych białych znaków.
     /// \param s Tekst, z którego należy usunąć białe znaki
     /// \return Tekst bez początkowych białych znaków.
-    static String trim_left(String s) noexcept {
+    inline String trim_left(String s) noexcept {
         s.erase(s.begin(), std::ranges::find_if(s, is_not_space));
         return s;
     }
@@ -33,7 +71,7 @@ namespace bee {
     /// Usunięcie zamykających (końcowych) białych znaków (z prawej strony).
     /// \param s Tekst, z którego należy usunąć białe znaki
     /// \return Tekst bez zamykających białych znaków.
-    static String trim_right(String s) noexcept {
+    inline String trim_right(String s) noexcept {
         s.erase(std::find_if(s.rbegin(), s.rend(), is_not_space).base(), s.end());
         return s;
     }
@@ -41,7 +79,7 @@ namespace bee {
     /// Usunięcie początkowych i końcowych białych znaków.
     /// \param s Tekst, z którego należy usunąć białe znaki
     /// \return Tekst bez początkowych i końcowych białych znaków.
-    static String trim(String s) noexcept {
+    inline String trim(String s) noexcept {
         return trim_left(trim_right(std::move(s)));
     }
 
@@ -128,7 +166,7 @@ namespace bee {
     /// Konwersja wektora bajtów na liczbę całkowitą o wskazanym typie (rozmiarze).
     /// Liczba bajtów musi być równa lub większa od wskazanego typu wynikowego.
     template<std::integral T>
-    std::optional<T> from_bytes(Span<const u8> const span) noexcept {
+    std::optional<T> from_bytes(Vectorizable auto const span) noexcept {
         if (span.size() >= sizeof(T)) {
             T value{};
             value = *reinterpret_cast<T const*>(span.first(sizeof(T)).data());
@@ -136,15 +174,15 @@ namespace bee {
         }
         return {};
     }
-    template<std::integral T>
-    std::optional<T> from_bytes(Span<const char> const span) noexcept {
-        if (span.size() >= sizeof(T)) {
-            T value{};
-            value = *reinterpret_cast<T const*>(span.first(sizeof(T)).data());
-            return value;
-        }
-        return {};
-    }
+    // template<std::integral T>
+    // std::optional<T> from_bytes(Span<const char> const span) noexcept {
+    //     if (span.size() >= sizeof(T)) {
+    //         T value{};
+    //         value = *reinterpret_cast<T const*>(span.first(sizeof(T)).data());
+    //         return value;
+    //     }
+    //     return {};
+    // }
 
     /****************************************************************
     *                                                               *
