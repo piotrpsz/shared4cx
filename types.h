@@ -86,4 +86,5 @@ namespace bee {
     using Pair = std::pair<T, U>;
     template<typename... T>
     using Variant = std::variant<T...>;
+    using Errc = std::errc;
 }
