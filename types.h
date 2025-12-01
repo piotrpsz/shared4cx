@@ -1,5 +1,29 @@
+// MIT License
+//
+// Copyright (c) 2024 Piotr Pszczółkowski
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+// Author: Piotr Pszczółkowski
+// Date: 29.11.2025
+// E-mail: piotr@beesoft.pl.
 #pragma once
-
 
 /*------- include files:
 -------------------------------------------------------------------*/
@@ -61,30 +85,21 @@ namespace bee {
     using f64 = double;
     using uint = unsigned int;
 
+    using Errc = std::errc;
     using String = std::string;
     using StringView = std::string_view;
     using Bytes = std::vector<char>;
     using BytesView = std::span<char>;
     using BytesViewConst = std::span<const char>;
-    template<typename T, std::size_t N>
-    using Array = std::array<T, N>;
-    template<typename T>
-    using Set = std::unordered_set<T>;
-    template<typename K, typename V>
-    using Map = std::unordered_map<K, V>;
-    template<typename T>
-    using Vector = std::vector<T>;
-    template<typename T>
-    using Span = std::span<T>;
-    template<typename T>
-    using Option = std::optional<T>;
-    template<typename T, typename E>
-    using Result = std::expected<T, E>;
-    template<typename T>
-    using Failure = std::unexpected<T>;
-    template<typename T, typename U>
-    using Pair = std::pair<T, U>;
-    template<typename... T>
-    using Variant = std::variant<T...>;
-    using Errc = std::errc;
+    template<typename T, std::size_t N> using Array = std::array<T, N>;
+    template<typename T> using Set = std::unordered_set<T>;
+    template<typename K, typename V> using Map = std::unordered_map<K, V>;
+    template<typename T> using Vector = std::vector<T>;
+    template<typename T> using Span = std::span<T>;
+    template<typename T> using Option = std::optional<T>;
+    template<typename T, typename E> using Result = std::expected<T, E>;
+    template<typename T> using Failure = std::unexpected<T>;
+    template<typename T, typename U> using Pair = std::pair<T, U>;
+    template<typename... T> using Variant = std::variant<T...>;
+
 }
