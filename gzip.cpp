@@ -23,7 +23,6 @@
 // Author: Piotr Pszczółkowski
 // Date: 2.11.2025
 // E-mail: piotr@beesoft.pl.
-// Project: sqlite4cx
 
 /*------- include files:
 -------------------------------------------------------------------*/

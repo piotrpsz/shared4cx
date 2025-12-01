@@ -23,15 +23,11 @@
 // Author: Piotr Pszczółkowski
 // Date: 2.11.2025
 // E-mail: piotr@beesoft.pl.
-// Project: sqlite4cx
 #pragma once
 
 /*------- include files:
 -------------------------------------------------------------------*/
 #include "types.h"
-#include <span>
-#include <vector>
-
 
 namespace bee {
     /// Kompresja bajtów.
