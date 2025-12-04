@@ -34,6 +34,7 @@
 #include <optional>
 #include <variant>
 #include <array>
+#include <memory>
 #include <expected>
 #include <unordered_set>
 #include <unordered_map>
@@ -91,6 +92,8 @@ namespace bee {
     using Bytes = std::vector<char>;
     using BytesView = std::span<char>;
     using BytesViewConst = std::span<const char>;
+    template<typename T> using Shared = std::shared_ptr<T>;
+    template<typename T> using Unique = std::unique_ptr<T>;
     template<typename T, std::size_t N> using Array = std::array<T, N>;
     template<typename T> using Set = std::unordered_set<T>;
     template<typename K, typename V> using Map = std::unordered_map<K, V>;
